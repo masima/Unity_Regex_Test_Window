@@ -14,17 +14,23 @@ public class RegexTestWindow : EditorWindow {
         EditorWindow.GetWindow<RegexTestWindow>();
     }
 
-    string regexRule = @"(\d)(\w)";
-    string testString = "123abc";
+    public string regexRule = @"(\d)(\w)";
+    public string testString = "123abc";
     Vector2 scrollPos = Vector2.zero;
 
     private void OnGUI()
     {
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+        EditorGUI.BeginChangeCheck();
         EditorGUILayout.LabelField("Reguler Expression");
-        regexRule = EditorGUILayout.TextField(regexRule);
+        var regexRule = EditorGUILayout.TextField(this.regexRule);
         EditorGUILayout.LabelField("Test String");
-        testString = EditorGUILayout.TextArea(testString);
+        var testString = EditorGUILayout.TextArea(this.testString);
+        if (EditorGUI.EndChangeCheck()) {
+            Undo.RecordObject(this, "Change RegexTestWindow text");
+            this.regexRule = regexRule;
+            this.testString = testString;
+        }
 
         var writer = new StringBuilder();
         try {
